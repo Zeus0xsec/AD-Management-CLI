@@ -2,35 +2,36 @@
 
 # Active Directory Management CLI (`ad_manager`)
 
-Narzędzie wiersza poleceń (CLI) napisane w Pythonie do automatyzacji zarządzania obiektami w lokalnym Active Directory (Windows Server 2025) oraz przeprowadzania kontrolowanych symulacji w hybrydowym laboratorium SOC.
+A lightweight Python command-line interface (CLI) tool designed to automate local Active Directory administration on Windows Server 2025 and simulate identity-based operations within a hybrid SOC lab environment.
 
-## Funkcjonalności
+## Features
 
-Interaktywne menu terminala obsługuje kluczowe operacje administracyjne na domenie:
-* **[1] Wyświetl użytkowników AD** – szybki podgląd kont domenowych.
-* **[2] Dodaj nowego użytkownika** – tworzenie nowych obiektów użytkowników w AD.
-* **[3] Resetuj hasło użytkownika** – bezpieczna zmiana hasła z obsługą znaków specjalnych.
-* **[4] Zablokuj / Odblokuj konto** – natychmiastowe zarządzanie statusem dostępu konta.
-* **[5] Usuń użytkownika** – usuwanie kont z domeny.
-* **[6] Utwórz Organizational Unit (OU)** – budowanie struktury jednostek organizacyjnych.
-* **[7] Usuń Organizational Unit (OU)** – usuwanie jednostek organizacyjnych.
+The interactive terminal menu supports core domain administration tasks:
+* **[1] List AD Users** (`Wyświetl użytkowników AD`) – quick enumeration of domain user accounts.
+* **[2] Add New User** (`Dodaj nowego użytkownika`) – automated creation of new domain user objects.
+* **[3] Reset User Password** (`Resetuj hasło użytkownika`) – secure password resets supporting special characters via Base64 encoding.
+* **[4] Enable / Disable Account** (`Zablokuj / Odblokuj konto`) – rapid access control management and incident containment.
+* **[5] Delete User** (`Usuń użytkownika`) – removal of user accounts from the domain.
+* **[6] Create Organizational Unit (OU)** (`Utwórz Organizational Unit (OU)`) – creation of AD OU containers.
+* **[7] Delete Organizational Unit (OU)** (`Usuń Organizational Unit (OU)`) – removal of AD OU containers.
 
-## Cechy techniczne
-* **Interfejs konsolowy:** Kolorowanie komunikatów statusu (`[ OK ]`, `[BŁĄD]`, `[ ! ]`) z natywną obsługą sekwencji ANSI w konsoli Windows (wykorzystanie `ctypes` oraz Windows API).
-* **Integracja z PowerShell:** Wykonywanie poleceń modułu `ActiveDirectory` z poziomu Pythona (`subprocess`, kodowanie `base64`).
-* **Dystrybucja:** Możliwość spakowania skryptu do samodzielnego pliku wykonywalnego `ad_manager.exe` za pomocą narzędzia `PyInstaller`.
+## Technical Highlights
+* **Native Windows ANSI Support:** Color-coded status output (`[ OK ]`, `[BŁĄD]`, `[ ! ]`) enabled dynamically via `ctypes` and the Windows API (`kernel32`).
+* **PowerShell Integration:** Executes `ActiveDirectory` module cmdlets directly from Python using `subprocess` and Base64 payload encoding.
+* **Standalone Packaging:** Designed to be compiled into a portable `ad_manager.exe` binary using `PyInstaller`.
+* **Localization Note:** *The interactive CLI prompts and status messages in the current release are localized in Polish.*
 
-## Zastosowanie w laboratorium SOC (Red Team / Blue Team)
+## Hybrid SOC Lab Use Case (Red Team / Blue Team)
 
-Projekt stanowi element poligonu badawczego opartego na **Windows Server 2025**, **Azure Arc** oraz **Microsoft Sentinel / Defender**:
-1. **Symulacja operacji (Red Team):** Generowanie zdarzeń administracyjnych oraz eskalacji uprawnień w domenie.
-2. **Audyt lokalny:** Weryfikacja logów bezpieczeństwa w Windows Event Viewer (m.in. Event ID `4728`, `4732`, `4737`, `4662`).
-3. **Detekcja w chmurze (Blue Team):** Testowanie niestandardowych reguł analitycznych KQL w Microsoft Sentinel zmapowanych na macierz **MITRE ATT&CK** (m.in. technika **T1098 – Account Manipulation** oraz taktyki *Persistence* i *Privilege Escalation*).
+This tool is actively used as part of a hybrid detection engineering lab built on **Windows Server 2025** (`DC01.cyberlab.local`), **Azure Arc**, and **Microsoft Sentinel / Defender**:
+1. **Attack Simulation (Red Team):** Generating realistic administrative and privilege escalation telemetry in Active Directory.
+2. **Local Auditing:** Verifying Windows Security Event Logs in Event Viewer (specifically Event IDs `4728`, `4732`, `4737`, and `4662`).
+3. **Cloud Detection (Blue Team):** Validating custom KQL analytics rules in Microsoft Sentinel mapped to **MITRE ATT&CK T1098 (Account Manipulation)** under the *Persistence* and *Privilege Escalation* tactics.
 
-## Wymagania i uruchomienie
+## Requirements & Usage
 
-* System Windows Server z zainstalowaną rolą AD DS oraz modułem `ActiveDirectory` dla PowerShella.
-* Python 3.x (uruchomiony w terminalu z uprawnieniami **Administratora**):
+* Windows Server with the **AD DS** role and the `ActiveDirectory` PowerShell module installed.
+* Python 3.x executed inside an elevated (**Administrator**) terminal:
 
 ```bash
 python ad_manager.py
