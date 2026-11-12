@@ -11,7 +11,6 @@ WIDTH = 60
 
 
 def _enable_ansi():
-    """Włącza kolory ANSI w konsoli Windows (Server 2016+). Zwraca True, jeśli się udało."""
     if os.name != "nt":
         return True
     try:
@@ -72,7 +71,6 @@ def ask_yes_no(question):
 # ====================== POWERSHELL ======================
 
 def run_ps(command):
-    """Uruchamia polecenie PowerShell. Zwraca (czy_sukces, tekst)."""
     full_command = (
         "$ErrorActionPreference = 'Stop';"
         "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;"
@@ -91,7 +89,6 @@ def run_ps(command):
 
 
 def ps_quote(value):
-    """Bezpiecznie ujmuje tekst w apostrofy dla PowerShella (chroni przed wstrzyknięciem komend)."""
     for quote in ("'", "\u2018", "\u2019", "\u201a", "\u201b"): 
         value = value.replace(quote, quote * 2)
     return f"'{value}'"
@@ -106,14 +103,12 @@ def show_error(message, details):
 # ====================== POMOCNICZE: OU ======================
 
 def ou_label(dn):
-    """Zamienia DistinguishedName na czytelną ścieżkę, np. 'Pracownicy / IT'."""
     parts = re.split(r"(?<!\\),", dn) 
     names = [p[3:].replace("\\,", ",") for p in parts if p.upper().startswith("OU=")]
     return " / ".join(reversed(names)) or dn
 
 
 def get_ous():
-    """Pobiera listę OU. Zwraca listę słowników (Name, DistinguishedName) albo None przy błędzie."""
     cmd = (
         "Get-ADOrganizationalUnit -Filter * | "
         "Select-Object Name, DistinguishedName | ConvertTo-Json -Compress"
@@ -140,11 +135,6 @@ def get_ous():
 
 
 def pick_ou(ous, zero_label):
-    """Wyświetla ponumerowaną listę OU i pyta o wybór.
-
-    Zwraca (True, dn) po wybraniu OU, (True, None) po wybraniu opcji [0]
-    oraz (False, None), gdy użytkownik wpisał niepoprawny numer.
-    """
     print()
     print(paint("  Dostępne jednostki OU:", "1"))
     print(f"  {paint('[0]', '96')} {zero_label}")
